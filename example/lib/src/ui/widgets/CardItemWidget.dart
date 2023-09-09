@@ -1,17 +1,18 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class CardItemWidget extends StatelessWidget {
-  final double width, height;
-  final String backgroundImage, title, subtitle, infoText;
-  final List<int> rawImage;
+  final double? width, height;
+  final String? backgroundImage, title, subtitle, infoText;
+  final List<int>? rawImage;
   static const titleMaxLines = 2;
   static const titleTextStyle =
       TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0);
 
   CardItemWidget(
-      {this.width,
-      this.height,
+      { this.width,
+       this.height,
       this.backgroundImage,
       this.title = "Title",
       this.rawImage,
@@ -20,17 +21,18 @@ class CardItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasRawImage = !(rawImage == null || rawImage.isEmpty);
+    final hasRawImage = !(rawImage == null || rawImage!.isEmpty);
     final mainContainer = Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: (backgroundImage == null && !hasRawImage)
-              ? AssetImage("assets/no_cover.png")
+              ? Image.asset("assets/no_cover.png").image
               : (hasRawImage)
-                  ? MemoryImage(rawImage) // Image.memory(rawImage)
-                  : FileImage(File(backgroundImage)),
+                  ? Image.memory(Uint8List.fromList(rawImage!))
+                      .image // Image.memory(rawImage)
+                  : FileImage(File(backgroundImage!)),
           fit: BoxFit.cover,
           alignment: AlignmentDirectional.center,
         ),
@@ -47,12 +49,12 @@ class CardItemWidget extends StatelessWidget {
               children: <Widget>[
                 Flexible(
                     child: Text(
-                  title,
+                  title!,
                   maxLines: titleMaxLines,
                   style: titleTextStyle,
                 )),
-                Flexible(child: Text(subtitle)),
-                Flexible(child: Text(infoText)),
+                Flexible(child: Text(subtitle!)),
+                Flexible(child: Text(infoText!)),
               ],
             ),
           ),

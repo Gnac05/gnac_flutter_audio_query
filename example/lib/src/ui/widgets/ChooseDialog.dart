@@ -7,10 +7,10 @@ class ChooseDialog extends StatefulWidget {
   final int indexSelected;
 
   ChooseDialog(
-      {String title,
-      List<String> options,
-      void onChange(int index),
-      int initialSelectedIndex})
+      {required String title,
+      required List<String> options,
+      required void onChange(int index),
+      required int initialSelectedIndex})
       : title = title,
         options = options,
         indexSelected = initialSelectedIndex,
@@ -21,7 +21,7 @@ class ChooseDialog extends StatefulWidget {
 }
 
 class _ChooseDialogState extends State<ChooseDialog> {
-  int selectedIndex;
+  int? selectedIndex;
 
   @override
   void initState() {

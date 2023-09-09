@@ -9,7 +9,7 @@ class ArtistListWidget extends StatelessWidget {
   final _callback;
 
   ArtistListWidget(
-      {@required this.artistList, onArtistSelected(final ArtistInfo info)})
+      {required this.artistList, required onArtistSelected(final ArtistInfo info)})
       : _callback = onArtistSelected;
 
   @override

@@ -10,8 +10,8 @@ class AlbumGridWidget extends StatelessWidget {
   final List<AlbumInfo> dataList;
 
   AlbumGridWidget(
-      {@required List<AlbumInfo> albumList,
-      onAlbumClicked(final AlbumInfo info)})
+      {required List<AlbumInfo> albumList,
+      required onAlbumClicked(final AlbumInfo info)})
       : _onItemTap = onAlbumClicked,
         dataList = albumList;
 

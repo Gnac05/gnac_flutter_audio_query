@@ -2,22 +2,25 @@ import 'package:flutter/widgets.dart';
 import './BlocBase.dart';
 
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
-  final Key key;
+  final Key? key;
   final Widget child;
   final T bloc;
 
-  static Type _typeOf<T>() => T;
+  // static Type _typeOf<T>() => T;
 
-  BlocProvider({this.key, @required this.child, @required this.bloc})
-      : super(key: key);
+  BlocProvider(
+    // this.key,
+  { required this.child, required this.bloc, this.key})
+      : super(key: key)
+      ;
 
   @override
   State<StatefulWidget> createState() => _BlocProviderState();
 
   static T of<T extends BlocBase>(final BuildContext context) {
-    final type = _typeOf<BlocProvider<T>>();
+    // final type = _typeOf<BlocProvider<T>>();
 
-    BlocProvider<T> provider = context.ancestorWidgetOfExactType(type);
+    BlocProvider<T> provider = context.findAncestorRenderObjectOfType() as BlocProvider<T> ;
     return provider.bloc;
   }
 }

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 
 class DetailsContentScreen extends StatelessWidget {
   final Widget bodyContent;
-  final String appBarBackgroundImage;
-  final String appBarTitle;
+  final String? appBarBackgroundImage;
+  final String? appBarTitle;
 
-  DetailsContentScreen(
-      {@required this.bodyContent,
-      this.appBarBackgroundImage,
-      this.appBarTitle});
+  DetailsContentScreen({
+    required this.bodyContent,
+     this.appBarBackgroundImage,
+     this.appBarTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class DetailsContentScreen extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Text(
-                  appBarTitle,
+                  appBarTitle!,
                   maxLines: 1,
                   softWrap: true,
                   overflow: TextOverflow.fade,
@@ -39,7 +40,7 @@ class DetailsContentScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                       )
                     : Image.file(
-                        File(appBarBackgroundImage),
+                        File(appBarBackgroundImage!),
                         fit: BoxFit.cover,
                       ),
               ),

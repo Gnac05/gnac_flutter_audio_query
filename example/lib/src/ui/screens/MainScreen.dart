@@ -20,10 +20,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  NavigationOptions _currentNavigationOption;
-  SearchBarState _currentSearchBarState;
-  TextEditingController _searchController;
-  ApplicationBloc bloc;
+  NavigationOptions? _currentNavigationOption;
+  SearchBarState? _currentSearchBarState;
+  TextEditingController? _searchController;
+  ApplicationBloc? bloc;
 
   static final Map<NavigationOptions, String> _titles = {
     NavigationOptions.ARTISTS: "Artists",
@@ -49,17 +49,17 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: StreamBuilder<SearchBarState>(
             initialData: _currentSearchBarState,
-            stream: bloc.searchBarState,
+            stream: bloc!.searchBarState,
             builder: (context, snapshot) {
               if (snapshot.data == SearchBarState.EXPANDED)
                 return TextField(
                   controller: _searchController,
                   autofocus: true,
                   onChanged: (typed) {
-                    print("make search for: ${_searchController.text}");
-                    bloc.search(
-                        option: _currentNavigationOption,
-                        query: _searchController.text);
+                    print("make search for: ${_searchController!.text}");
+                    bloc!.search(
+                        option: _currentNavigationOption!,
+                        query: _searchController!.text);
                   },
                   style: new TextStyle(
                     color: Colors.white,
@@ -75,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
         actions: <Widget>[
           StreamBuilder<SearchBarState>(
               initialData: _currentSearchBarState,
-              stream: bloc.searchBarState,
+              stream: bloc!.searchBarState,
               builder: (context, snapshot) {
                 switch (snapshot.data) {
                   case SearchBarState.EXPANDED:
@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         tooltip:
                             "Search for ${_titles[_currentNavigationOption]}",
-                        onPressed: () => bloc
+                        onPressed: () => bloc!
                             .changeSearchBarState(SearchBarState.COLLAPSED));
                   default:
                     //case SearchBarState.COLLAPSED:
@@ -96,26 +96,26 @@ class _MainScreenState extends State<MainScreen> {
                         tooltip:
                             "Search for ${_titles[_currentNavigationOption]}",
                         onPressed: () =>
-                            bloc.changeSearchBarState(SearchBarState.EXPANDED));
+                            bloc!.changeSearchBarState(SearchBarState.EXPANDED));
                 }
               }),
           StreamBuilder<NavigationOptions>(
               initialData: _currentNavigationOption,
-              stream: bloc.currentNavigationOption,
+              stream: bloc!.currentNavigationOption,
               builder: (context, snapshot) {
                 return IconButton(
                   icon: Icon(
                     Icons.sort,
                   ),
                   tooltip: "${_titles[snapshot.data]} Sort Type",
-                  onPressed: () => _displaySortChooseDialog(snapshot.data),
+                  onPressed: () => _displaySortChooseDialog(snapshot.data!),
                 );
               }),
         ],
       ),
       body: StreamBuilder<NavigationOptions>(
         initialData: _currentNavigationOption,
-        stream: bloc.currentNavigationOption,
+        stream: bloc!.currentNavigationOption,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _currentNavigationOption = snapshot.data;
@@ -123,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
             switch (_currentNavigationOption) {
               case NavigationOptions.ARTISTS:
                 return StreamBuilder<List<ArtistInfo>>(
-                  stream: bloc.artistStream,
+                  stream: bloc!.artistStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
                       return Utility.createDefaultInfoWidget(
@@ -133,19 +133,19 @@ class _MainScreenState extends State<MainScreen> {
                       return Utility.createDefaultInfoWidget(
                           CircularProgressIndicator());
 
-                    return (snapshot.data.isEmpty)
+                    return (snapshot.data!.isEmpty)
                         ? NoDataWidget(
                             title: "There is no Artists",
                           )
                         : ArtistListWidget(
-                            artistList: snapshot.data,
+                            artistList: snapshot.data!,
                             onArtistSelected: _openArtistPage);
                   },
                 );
 
               case NavigationOptions.ALBUMS:
                 return StreamBuilder<List<AlbumInfo>>(
-                  stream: bloc.albumStream,
+                  stream: bloc!.albumStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
                       return Utility.createDefaultInfoWidget(
@@ -155,19 +155,19 @@ class _MainScreenState extends State<MainScreen> {
                       return Utility.createDefaultInfoWidget(
                           CircularProgressIndicator());
 
-                    return (snapshot.data.isEmpty)
+                    return (snapshot.data!.isEmpty)
                         ? NoDataWidget(
                             title: "There is no Albums",
                           )
                         : AlbumGridWidget(
                             onAlbumClicked: _openAlbumPage,
-                            albumList: snapshot.data);
+                            albumList: snapshot.data!);
                   },
                 );
 
               case NavigationOptions.GENRES:
                 return StreamBuilder<List<GenreInfo>>(
-                  stream: bloc.genreStream,
+                  stream: bloc!.genreStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
                       return Utility.createDefaultInfoWidget(
@@ -177,18 +177,18 @@ class _MainScreenState extends State<MainScreen> {
                       return Utility.createDefaultInfoWidget(
                           CircularProgressIndicator());
 
-                    return (snapshot.data.isEmpty)
+                    return (snapshot.data!.isEmpty)
                         ? NoDataWidget(
                             title: "There is no Genres",
                           )
                         : GenreListWidget(
-                            onTap: _openGenrePage, genreList: snapshot.data);
+                            onTap: _openGenrePage, genreList: snapshot.data!);
                   },
                 );
 
               case NavigationOptions.SONGS:
                 return StreamBuilder<List<SongInfo>>(
-                    stream: bloc.songStream,
+                    stream: bloc!.songStream,
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
                         return Utility.createDefaultInfoWidget(
@@ -198,16 +198,17 @@ class _MainScreenState extends State<MainScreen> {
                         return Utility.createDefaultInfoWidget(
                             CircularProgressIndicator());
 
-                      return (snapshot.data.isEmpty)
+                      return (snapshot.data!.isEmpty)
                           ? NoDataWidget(
                               title: "There is no Songs",
                             )
-                          : SongListWidget(songList: snapshot.data);
+                          : SongListWidget(songList: snapshot.data!);
                     });
 
-              case NavigationOptions.PLAYLISTS:
+              // case NavigationOptions.PLAYLISTS:
+              default:
                 return StreamBuilder<List<PlaylistInfo>>(
-                  stream: bloc.playlistStream,
+                  stream: bloc!.playlistStream,
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
                       return Utility.createDefaultInfoWidget(
@@ -217,12 +218,12 @@ class _MainScreenState extends State<MainScreen> {
                       return Utility.createDefaultInfoWidget(
                           CircularProgressIndicator());
 
-                    return (snapshot.data.isEmpty)
+                    return (snapshot.data!.isEmpty)
                         ? NoDataWidget(
                             title: "There is no Playlist",
                           )
                         : PlaylistListWidget(
-                            appBloc: bloc, dataList: snapshot.data);
+                            appBloc: bloc!, dataList: snapshot.data!);
                   },
                 );
             }
@@ -236,7 +237,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: _createBottomBarNavigator(),
       floatingActionButton: StreamBuilder<NavigationOptions>(
         initialData: _currentNavigationOption,
-        stream: bloc.currentNavigationOption,
+        stream: bloc!.currentNavigationOption,
         builder: (context, snapshot) {
           switch (snapshot.data) {
             case NavigationOptions.PLAYLISTS:
@@ -259,48 +260,41 @@ class _MainScreenState extends State<MainScreen> {
       ),
       child: StreamBuilder<NavigationOptions>(
           initialData: _currentNavigationOption,
-          stream: bloc.currentNavigationOption,
+          stream: bloc!.currentNavigationOption,
           builder: (context, snapshot) {
             if (snapshot.hasData) _currentNavigationOption = snapshot.data;
 
             return BottomNavigationBar(
-              currentIndex: _currentNavigationOption.index,
+              currentIndex: _currentNavigationOption!.index,
               onTap: (indexSelected) {
-                bloc.changeNavigation(NavigationOptions.values[indexSelected]);
+                bloc!.changeNavigation(NavigationOptions.values[indexSelected]);
               },
               type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.account_box, color: Colors.white),
-                  title: Text(
+                  label: 
                     "Artists",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                   
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.album,
                       color: Colors.white,
                     ),
-                    title: Text(
-                      "Albums",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                    label:
+                      "Albums",),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.library_music, color: Colors.white),
-                  title: Text(
+                  label: 
                     "Songs",
-                    style: TextStyle(color: Colors.white),
-                  ),
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.music_note, color: Colors.white),
-                    title:
-                        Text("Genre", style: TextStyle(color: Colors.white))),
+                    label:"Genre",),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.list, color: Colors.white),
-                    title: Text("Playlists",
-                        style: TextStyle(color: Colors.white))),
+                    label: "Playlists",),
               ],
             );
           }),
@@ -314,28 +308,28 @@ class _MainScreenState extends State<MainScreen> {
           return ChooseDialog(
             title: "${_titles[option]} Sort Options",
             initialSelectedIndex:
-                bloc.getLastSortSelectionChooseBasedInNavigation(option),
-            options: ApplicationBloc.sortOptionsMap[option],
+                bloc!.getLastSortSelectionChooseBasedInNavigation(option),
+            options: ApplicationBloc.sortOptionsMap[option]!,
             onChange: (index) {
               switch (option) {
                 case NavigationOptions.ARTISTS:
-                  bloc.changeArtistSortType(ArtistSortType.values[index]);
+                  bloc!.changeArtistSortType(ArtistSortType.values[index]);
                   break;
 
                 case NavigationOptions.ALBUMS:
-                  bloc.changeAlbumSortType(AlbumSortType.values[index]);
+                  bloc!.changeAlbumSortType(AlbumSortType.values[index]);
                   break;
 
                 case NavigationOptions.SONGS:
-                  bloc.changeSongSortType(SongSortType.values[index]);
+                  bloc!.changeSongSortType(SongSortType.values[index]);
                   break;
 
                 case NavigationOptions.GENRES:
-                  bloc.changeGenreSortType(GenreSortType.values[index]);
+                  bloc!.changeGenreSortType(GenreSortType.values[index]);
                   break;
 
                 case NavigationOptions.PLAYLISTS:
-                  bloc.changePlaylistSortType(PlaylistSortType.values[index]);
+                  bloc!.changePlaylistSortType(PlaylistSortType.values[index]);
                   break;
               }
               Navigator.pop(context);
@@ -347,7 +341,7 @@ class _MainScreenState extends State<MainScreen> {
   void _showNewPlaylistDialog() async {
     showDialog(context: context, builder: (context) => NewPlaylistDialog())
         .then((data) {
-      if (data != null) bloc.loadPlaylistData();
+      if (data != null) bloc!.loadPlaylistData();
     });
   }
 
@@ -365,7 +359,7 @@ class _MainScreenState extends State<MainScreen> {
           appBarBackgroundImage: artist.artistArtPath,
           appBarTitle: artist.name,
           bodyContent: FutureBuilder<List<AlbumInfo>>(
-              future: bloc.audioQuery.getAlbumsFromArtist(artist: artist.name),
+              future: bloc!.audioQuery.getAlbumsFromArtist(artist: artist.name!),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
                   return Utility.createDefaultInfoWidget(
@@ -375,7 +369,7 @@ class _MainScreenState extends State<MainScreen> {
                     onAlbumClicked: (album) {
                       _openArtistAlbumPage(artist, album);
                     },
-                    albumList: snapshot.data);
+                    albumList: snapshot.data!,);
               }),
         ),
       ),
@@ -390,8 +384,8 @@ class _MainScreenState extends State<MainScreen> {
           appBarBackgroundImage: album.albumArt,
           appBarTitle: album.title,
           bodyContent: FutureBuilder<List<SongInfo>>(
-              future: bloc.audioQuery.getSongsFromArtistAlbum(
-                  artist: artist.name,
+              future: bloc!.audioQuery.getSongsFromArtistAlbum(
+                  artist: artist.name!,
                   sortType: SongSortType.DISPLAY_NAME,
                   albumId: album.id),
               builder: (context, snapshot) {
@@ -399,7 +393,7 @@ class _MainScreenState extends State<MainScreen> {
                   return Utility.createDefaultInfoWidget(
                       CircularProgressIndicator());
 
-                return SongListWidget(songList: snapshot.data);
+                return SongListWidget(songList: snapshot.data!);
               }),
         ),
       ),
@@ -414,14 +408,14 @@ class _MainScreenState extends State<MainScreen> {
           appBarBackgroundImage: album.albumArt,
           appBarTitle: album.title,
           bodyContent: FutureBuilder<List<SongInfo>>(
-              future: bloc.audioQuery.getSongsFromAlbum(
+              future: bloc!.audioQuery.getSongsFromAlbum(
                   sortType: SongSortType.DISPLAY_NAME, albumId: album.id),
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
                   return Utility.createDefaultInfoWidget(
                       CircularProgressIndicator());
 
-                return SongListWidget(songList: snapshot.data);
+                return SongListWidget(songList: snapshot.data!);
               }),
         ),
       ),
