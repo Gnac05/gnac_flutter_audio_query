@@ -178,10 +178,19 @@ class FlutterAudioQuery {
   /// This method returns a list with all songs available on device storage.
   Future<List<SongInfo>> getSongs(
       {SongSortType sortType = SongSortType.DEFAULT}) async {
-    List<dynamic> dataList = await channel.invokeMethod("getSongs", {
+    List<dynamic> dataList = [];
+    dataList = await channel.invokeMethod("getSongs", {
       SOURCE_KEY: SOURCE_SONGS,
       SORT_TYPE: sortType.index,
     });
+    return _parseSongDataList(dataList);
+  }
+
+  /// This method returns a list with all music available on device storage.
+  Future<List<SongInfo>> getMusics({SongSortType sortType = SongSortType.DEFAULT}) async{
+    List<dynamic> dataList = [];
+    dataList = await getSongs(sortType: sortType);
+    dataList.where((song) => song.isMusic == true);
     return _parseSongDataList(dataList);
   }
 
@@ -394,12 +403,13 @@ class FlutterAudioQuery {
   /// If already exist a playlist with same name as [playlistName] an
   /// exception is throw.
   static Future<PlaylistInfo> createPlaylist(
-      {required final String playlistName}) async {
+      {required final String playlistName, required final String? image}) async {
     dynamic data =
         await FlutterAudioQuery.channel.invokeMethod("createPlaylist", {
       FlutterAudioQuery.SOURCE_KEY: FlutterAudioQuery.SOURCE_PLAYLIST,
       FlutterAudioQuery.PLAYLIST_METHOD_TYPE: PlayListMethodType.WRITE.index,
       "playlist_name": playlistName,
+      "playlist_image": image
     });
     return PlaylistInfo._(data);
   }

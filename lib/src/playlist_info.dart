@@ -3,13 +3,18 @@ part of flutter_audio_query;
 class PlaylistInfo extends DataModel {
   /// Ids of songs that appears on this playlist.
   List<String> _memberIds = [];
+  String? _image;
 
   PlaylistInfo._(Map<dynamic, dynamic> map) : super._(map) {
     _memberIds = List<String>.from(_data["memberIds"]);
+    _image = _data["image"] as String?;
   }
 
   /// The playlist name
   String get name => _data["name"];
+
+  /// The playlsit image
+  String? get image => _image;
 
   /// Returns a list with id's of SongInfo which are songs
   /// that appears in this playlist. You can retrieve SongInfo objects that

@@ -105,7 +105,7 @@ public class PlaylistLoader extends AbstractLoader {
      * @param results MethodChannel.Result object to send reply for dart.
      * @param name playlist desired name.
      */
-    public void createPlaylist(final MethodChannel.Result results, final String name) {
+    public void createPlaylist(final MethodChannel.Result results, final String name, final String image) {
         if (name != null && name.length() > 0) {
             ContentResolver resolver = getContentResolver();
             final String selection =  PLAYLIST_PROJECTION[1] + " =?";
@@ -135,6 +135,7 @@ public class PlaylistLoader extends AbstractLoader {
                                      data.put(key,dataValue);
                                 }
                                 data.put("memberIds", new ArrayList<String>());
+                                data.put("image", image);
                             }
 
                             catch(Exception ex){
