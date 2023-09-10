@@ -190,7 +190,7 @@ class FlutterAudioQuery {
   Future<List<SongInfo>> getMusics({SongSortType sortType = SongSortType.DEFAULT}) async{
     List<dynamic> dataList = [];
     dataList = await getSongs(sortType: sortType);
-    dataList.where((song) => song.isMusic == true);
+    dataList = dataList.where((song) => song.isMusic == true).toList();
     return _parseSongDataList(dataList);
   }
 
