@@ -438,6 +438,7 @@ public class AudioQueryDelegate implements PluginRegistry.RequestPermissionsResu
         String playlistId;
         String songId;
         final String keyPlaylistName = "playlist_name";
+        final String keyPlaylistImage = "playlist_image";
         final String keyPlaylistId = "playlist_id";
         final String keySongId = "song_id";
 
@@ -448,7 +449,8 @@ public class AudioQueryDelegate implements PluginRegistry.RequestPermissionsResu
 
             case "createPlaylist":
                 String name = call.argument(keyPlaylistName);
-                m_playlistLoader.createPlaylist(result, name);
+                String image = call.argument(keyPlaylistImage);
+                m_playlistLoader.createPlaylist(result, name, image);
                 break;
 
             case "addSongToPlaylist":
